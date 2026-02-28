@@ -15,19 +15,22 @@
 | 利润表 | `利润表201210555(仅供北京大学使用)/FS_Comins.xlsx` | `Stkcd`, `Accper`, 各损益科目编码 | 盈利能力、经营质量特征 |
 | 现金流量表 | `现金流量表(直接法)201221487(仅供北京大学使用)/FS_Comscfd.xlsx` | `Stkcd`, `Accper`, 各现金流科目编码 | 现金流稳定性特征 |
 | 股票公司主数据 | `股票市场/TRDNEW_Co.xlsx` | `Stkcd`, `Listdt`, `Markettype`, `Statco`, `Nnindcd` | 股票样本池筛选、交易数据映射 |
+| 日个股回报率（批次1） | `日个股回报率文件021102515(仅供北京大学使用)/TRD_Dalyr*.xlsx` | `Stkcd`, `Trddt`, `Clsprc`, `Dretwd`, `Dretnd`, `Trdsta`, `Markettype` | 日频市场表现、波动与收益特征 |
+| 日个股回报率（批次2） | `日个股回报率文件021539700(仅供北京大学使用)/TRD_Dalyr*.xlsx` | `Stkcd`, `Trddt`, `Clsprc`, `Dretwd`, `Dretnd`, `Trdsta`, `Markettype` | 补充分段交易期，增强时间连续性 |
+| 日个股回报率（批次3） | `日个股回报率文件022416998(仅供北京大学使用)/TRD_Dalyr*.xlsx` | `Stkcd`, `Trddt`, `Clsprc`, `Dretwd`, `Dretnd`, `Trdsta`, `Markettype` | 扩展覆盖区间，支持滚动窗口建模 |
+| 上市公司信用评级 | `上市公司信用评级情况表160746111(仅供北京大学使用)/DEBT_BOND_RATING.xlsx` | `Symbol`, `DeclareDate`, `RatingDate`, `LongTermRating`, `RatingProspect`, `RatingInstitution` | 违约风险先验、信用状态迁移特征 |
 
-### 2. 股票市场数据（可获取项，准备下载）
+### 2. 新增数据补充说明（股市 + 信用评级）
 
-基于 `可以得到的股市数据/` 截图，当前优先级建议如下：
-
-- 必须：`日个股回报率文件`、`日历文件`、`公司文件`
-- 建议：`股票历史日行情信息表(后复权)`、`指数文件`、`无风险利率文件`
-- 可选增强：`个股走势特征表`、`分配文件`、`股本变动文件`
+- 日个股回报率数据已在仓库内落地为 3 个批次目录，字段结构一致，主表均为 `TRD_Dalyr*.xlsx`。
+- 信用评级数据已落地为 `DEBT_BOND_RATING.xlsx`，可按公司-时间维度并入样本。
+- 证券代码统一建议：优先将 `Symbol` 映射为 `Stkcd` 后再做跨表 join，避免主键不一致。
+- 评级特征建议：`LongTermRating` 按等级有序编码，`RatingProspect` 做类别编码并保留变动事件。
 
 ### 3. 数据主键与时间对齐约定
 
-- 公司主键：`Stkcd`（或 `Symbol` 映射到 `Stkcd`）
-- 时间主键：财务类按 `Accper/Reptdt`，事件类按公告日/发生日，交易类按交易日
+- 公司主键：`Stkcd`（评级表中的 `Symbol` 需先映射）
+- 时间主键：财务类按 `Accper/Reptdt`，事件类按公告日/发生日，交易类按 `Trddt`，评级按 `RatingDate/DeclareDate`
 - 初始样本范围：A股上市公司（后续可按研究需要扩展）
 
 ## 预测标签
@@ -36,7 +39,93 @@
 
 ## 数据处理流程
 
-（待补充）
+### 1. 脚本入口
+
+- 脚本：`scripts/prepare_data_stage1.py`
+- 依赖：项目内 `third_party/python/openpyxl`（已安装）
+
+### 2. 运行方式
+
+- 快速版（节点 + 担保边 + 评级事件，不跑超大财务表）：
+  - `PYTHONPATH=./third_party/python python3 scripts/prepare_data_stage1.py --skip-financial`
+- 财务版（节点 + 财务特征）：
+  - `PYTHONPATH=./third_party/python python3 scripts/prepare_data_stage1.py --skip-rating --skip-guarantee`
+- 全量版（最慢，可额外带日频）：
+  - `PYTHONPATH=./third_party/python python3 scripts/prepare_data_stage1.py --include-daily`
+
+### 3. 处理规则（当前已实现）
+
+- 统一跳过 CSMAR 文件中字段说明/单位两行（`skiprows=[1,2]`）。
+- 证券代码标准化为 6 位字符串（`Stkcd/Symbol -> 000001` 格式）。
+- 日期字段统一转为 `YYYY-MM-DD`。
+- 数值字段统一做 `to_numeric`，非法值转空值。
+- 担保边中被担保方名称做名称映射（上市公司全称/简称精确匹配）并输出匹配标记。
+
+### 4. 当前输出（`processed/stage1/`）
+
+- `nodes_company.csv`：3915 家 A 股样本公司。
+- `features_financial.csv`：155771 条公司-报告期财务特征，覆盖 3915 家公司。
+- `events_rating.csv`：8529 条信用评级事件，覆盖 936 家公司。
+- `edges_guarantee.csv`：228948 条担保事件边，源公司覆盖 2423 家。
+- `summary.json`：本次运行统计摘要。
+
+### 5. 当前数据结论
+
+- 财务特征覆盖率高（对样本公司覆盖率 100%）。
+- 评级覆盖率约 23.9%，可作为增强信号但不能作为唯一标签来源。
+- 担保目标映射到“上市公司节点”的比例很低（约 0.19%），说明多数被担保方是非上市主体。
+- 因此建图建议：
+  - 第一阶段先用“上市公司节点 + 担保出边统计特征”做静态多关系模型。
+  - 第二阶段再扩展“非上市企业节点”或引入企业名称实体图，提升风险传导路径完整性。
+
+### 6. 最终可用数据（上市公司口径）
+
+| 文件 | 说明 | 关键字段 |
+|---|---|---|
+| `processed/stage1/nodes_company.csv` | 上市公司样本池（A 股） | `Stkcd`, `Listdt`, `Markettype`, `Nnindcd`, `Regcap` |
+| `processed/stage1/features_financial.csv` | 财务特征（公司-报告期） | `Stkcd`, `Accper`, `A001101000`, `A001109000`, `A001111000`, `B001100000`, `C001001000` |
+| `processed/stage1/features_guarantee_yearly.csv` | 担保暴露特征（公司-年份） | `src_stkcd`, `year`, `guar_event_cnt`, `guar_amt_sum`, `guar_listed_target_ratio` |
+| `processed/stage1/events_rating.csv` | 信用评级事件（公司-事件时间） | `Stkcd`, `event_date`, `LongTermRating`, `RatingProspect`, `RatingInstitution` |
+| `processed/stage1/edges_guarantee_listed_to_listed.csv` | 上市公司→上市公司担保边（较稀疏） | `src_stkcd`, `dst_stkcd`, `event_date`, `ActualGuaranteeAmount` |
+| `processed/stage1/panel_company_year.csv` | 训练面板（公司-年份） | 见下方字段说明 |
+
+### 7. 训练面板字段说明（`panel_company_year.csv`）
+
+- 主键：`Stkcd`, `year`
+- 公司静态字段：`Markettype`, `Nnindcd`, `Statco`, `Regcap`
+- 财务字段：`total_assets`, `total_liabilities`, `total_equity`, `revenue_total`, `revenue_main`, `cashflow_operating`, `asset_liability_ratio`
+- 担保字段：`guar_event_cnt`, `guar_amt_sum`, `guar_amt_mean`, `guar_listed_target_cnt`, `guar_nonlisted_target_cnt`, `guar_listed_target_ratio`
+- 评级字段：`rating_event_cnt`, `rating_agency_nunique`, `rating_longterm_nonnull_cnt`, `rating_latest_longterm`, `rating_latest_prospect`
+- 标签占位：`label_default_next_year`, `label_st_next_year`（当前为空，待标签工程）
+- 覆盖标记：`has_financial`, `has_rating`
+
+### 8. 训练面板生成命令
+
+- `python3 scripts/build_training_panel.py`
+- 输出：
+  - `processed/stage1/panel_company_year.csv`
+  - `processed/stage1/panel_company_year_summary.json`
+
+### 9. 评级任务训练数据（已构造）
+
+- 脚本：`python3 scripts/build_rating_task_dataset.py`
+- 输出目录：`processed/stage1/rating_task/`
+  - `rating_panel_labeled.csv`：评级任务总样本（公司-年份）
+  - `train.csv`：训练集（2010-2018）
+  - `val.csv`：验证集（2019-2021）
+  - `test.csv`：测试集（2022-2024）
+  - `summary.json`：样本统计
+
+当前构造结果：
+- 总样本：2987
+- 覆盖公司：857
+- 年份范围：2011-2023（因需同时存在当年评级与下一年评级）
+- 降级标签占比（`label_downgrade_next_year`）：约 4.79%
+
+关键字段：
+- 当前评级：`rating_norm`, `rating_score`, `rating_latest_prospect`, `prospect_code`
+- 下一年标签：`label_rating_next_year`, `label_rating_score_next_year`, `label_downgrade_next_year`
+- 其余财务/担保/静态字段与 `panel_company_year.csv` 保持一致。
 
 ## 模型与实验
 

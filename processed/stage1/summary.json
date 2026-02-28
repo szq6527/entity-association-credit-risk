@@ -1,0 +1,25 @@
+{
+  "nodes_company": {
+    "rows": 3915,
+    "unique_stkcd": 3915,
+    "list_date_min": "2010-01-06",
+    "list_date_max": "2024-12-30",
+    "regcap_non_null_ratio": 1.0
+  },
+  "events_rating": {
+    "rows": 8529,
+    "unique_stkcd": 936,
+    "event_date_min": "2010-04-06",
+    "event_date_max": "2024-12-26",
+    "long_term_rating_non_null_ratio": 0.9584945480126627
+  },
+  "edges_guarantee": {
+    "rows": 228948,
+    "unique_src_stkcd": 2423,
+    "listed_target_match_ratio": 0.0018912591505494698,
+    "listed_to_listed_rows": 433,
+    "yearly_feature_rows": 14288,
+    "event_date_min": "1994-01-25",
+    "event_date_max": "2040-10-30"
+  }
+}

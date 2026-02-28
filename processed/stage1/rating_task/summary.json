@@ -1,0 +1,13 @@
+{
+  "rows_total": 2987,
+  "companies_total": 857,
+  "year_min": 2011,
+  "year_max": 2023,
+  "downgrade_rate": 0.04787412119183127,
+  "rows_train": 945,
+  "rows_val": 1112,
+  "rows_test": 930,
+  "train_downgrade_rate": 0.04126984126984127,
+  "val_downgrade_rate": 0.05575539568345324,
+  "test_downgrade_rate": 0.04516129032258064
+}

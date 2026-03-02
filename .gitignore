@@ -1,10 +1,37 @@
-# Local research assets
+# macOS / Python cache
+.DS_Store
+**/__pycache__/
+*.pyc
+
+# Local research assets (raw source)
 论文/
 数据/
 研究思路.md
-
-# macOS
-.DS_Store
+**/*.xlsx
+**/*.xls
 
 # External repos
 external/HTGNN/
+
+# Local runtime/cache
+.dgl/
+scripts/__pycache__/
+third_party/python/
+
+# Keep only training-required datasets under processed/
+processed/**
+
+!processed/stage1/
+!processed/stage1/rating_task/
+!processed/stage1/rating_task/rating_panel_labeled.csv
+!processed/stage1/rating_task/train.csv
+!processed/stage1/rating_task/val.csv
+!processed/stage1/rating_task/test.csv
+!processed/stage1/rating_task/summary.json
+
+!processed/final_hetero_temporal_graph/
+!processed/final_hetero_temporal_graph/node_mapping.csv
+!processed/final_hetero_temporal_graph/feature_schema.json
+!processed/final_hetero_temporal_graph/metadata.json
+!processed/final_hetero_temporal_graph/snapshots/
+!processed/final_hetero_temporal_graph/snapshots/**

@@ -1,0 +1,35 @@
+{
+  "node_feature_columns": [
+    "Markettype",
+    "Nnindcd",
+    "Statco",
+    "Regcap",
+    "total_assets",
+    "total_liabilities",
+    "total_equity",
+    "revenue_total",
+    "revenue_main",
+    "cashflow_operating",
+    "asset_liability_ratio",
+    "guar_event_cnt",
+    "guar_amt_sum",
+    "guar_amt_mean",
+    "guar_listed_target_ratio",
+    "rating_event_cnt",
+    "rating_agency_nunique",
+    "rating_latest_longterm",
+    "rating_latest_prospect",
+    "has_financial",
+    "has_rating"
+  ],
+  "relation_types": [
+    "guarantee",
+    "equity_assoc",
+    "co_controller"
+  ],
+  "time_granularity": "year",
+  "year_range": [
+    2010,
+    2024
+  ]
+}

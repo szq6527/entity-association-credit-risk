@@ -1,0 +1,133 @@
+{
+  "num_nodes_total": 3915,
+  "num_years": 15,
+  "year_min": 2010,
+  "year_max": 2024,
+  "edge_totals": {
+    "guarantee": 40,
+    "equity_assoc": 456,
+    "co_controller": 44216
+  },
+  "yearly": [
+    {
+      "year": 2010,
+      "num_nodes": 3915,
+      "num_active_nodes": 350,
+      "num_edges_guarantee": 1,
+      "num_edges_equity_assoc": 2,
+      "num_edges_co_controller": 144
+    },
+    {
+      "year": 2011,
+      "num_nodes": 3915,
+      "num_active_nodes": 632,
+      "num_edges_guarantee": 1,
+      "num_edges_equity_assoc": 4,
+      "num_edges_co_controller": 270
+    },
+    {
+      "year": 2012,
+      "num_nodes": 3915,
+      "num_active_nodes": 787,
+      "num_edges_guarantee": 1,
+      "num_edges_equity_assoc": 4,
+      "num_edges_co_controller": 376
+    },
+    {
+      "year": 2013,
+      "num_nodes": 3915,
+      "num_active_nodes": 789,
+      "num_edges_guarantee": 1,
+      "num_edges_equity_assoc": 2,
+      "num_edges_co_controller": 344
+    },
+    {
+      "year": 2014,
+      "num_nodes": 3915,
+      "num_active_nodes": 914,
+      "num_edges_guarantee": 2,
+      "num_edges_equity_assoc": 2,
+      "num_edges_co_controller": 470
+    },
+    {
+      "year": 2015,
+      "num_nodes": 3915,
+      "num_active_nodes": 1137,
+      "num_edges_guarantee": 2,
+      "num_edges_equity_assoc": 8,
+      "num_edges_co_controller": 672
+    },
+    {
+      "year": 2016,
+      "num_nodes": 3915,
+      "num_active_nodes": 1362,
+      "num_edges_guarantee": 2,
+      "num_edges_equity_assoc": 8,
+      "num_edges_co_controller": 944
+    },
+    {
+      "year": 2017,
+      "num_nodes": 3915,
+      "num_active_nodes": 1800,
+      "num_edges_guarantee": 3,
+      "num_edges_equity_assoc": 10,
+      "num_edges_co_controller": 1228
+    },
+    {
+      "year": 2018,
+      "num_nodes": 3915,
+      "num_active_nodes": 1906,
+      "num_edges_guarantee": 1,
+      "num_edges_equity_assoc": 22,
+      "num_edges_co_controller": 1570
+    },
+    {
+      "year": 2019,
+      "num_nodes": 3915,
+      "num_active_nodes": 2109,
+      "num_edges_guarantee": 3,
+      "num_edges_equity_assoc": 24,
+      "num_edges_co_controller": 2364
+    },
+    {
+      "year": 2020,
+      "num_nodes": 3915,
+      "num_active_nodes": 2544,
+      "num_edges_guarantee": 5,
+      "num_edges_equity_assoc": 36,
+      "num_edges_co_controller": 3878
+    },
+    {
+      "year": 2021,
+      "num_nodes": 3915,
+      "num_active_nodes": 3060,
+      "num_edges_guarantee": 5,
+      "num_edges_equity_assoc": 54,
+      "num_edges_co_controller": 6208
+    },
+    {
+      "year": 2022,
+      "num_nodes": 3915,
+      "num_active_nodes": 3484,
+      "num_edges_guarantee": 6,
+      "num_edges_equity_assoc": 82,
+      "num_edges_co_controller": 7468
+    },
+    {
+      "year": 2023,
+      "num_nodes": 3915,
+      "num_active_nodes": 3778,
+      "num_edges_guarantee": 4,
+      "num_edges_equity_assoc": 92,
+      "num_edges_co_controller": 9126
+    },
+    {
+      "year": 2024,
+      "num_nodes": 3915,
+      "num_active_nodes": 3859,
+      "num_edges_guarantee": 3,
+      "num_edges_equity_assoc": 106,
+      "num_edges_co_controller": 9154
+    }
+  ]
+}

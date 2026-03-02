@@ -1,0 +1,41 @@
+{
+  "year_min": 2010,
+  "year_max": 2024,
+  "window": 6,
+  "hidden_dim": 128,
+  "dropout": 0.25,
+  "epochs": 220,
+  "patience": 45,
+  "lr": 0.0005,
+  "weight_decay": 0.0008,
+  "focal_gamma": 1.5,
+  "loss": "bce",
+  "relations": "guarantee,equity_assoc,co_controller",
+  "no_tabular_residual": true,
+  "exp_name": "v10_all_notab_bce_w6_h128",
+  "seed": 42,
+  "device": "cpu",
+  "relations_parsed": [
+    "guarantee",
+    "equity_assoc",
+    "co_controller"
+  ],
+  "use_tabular_residual": false,
+  "device_actual": "cpu",
+  "in_dim": 156,
+  "train_years": [
+    2018,
+    2017,
+    2016,
+    2015
+  ],
+  "val_years": [
+    2019,
+    2020,
+    2021
+  ],
+  "test_years": [
+    2022,
+    2023
+  ]
+}

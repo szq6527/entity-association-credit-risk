@@ -44,7 +44,14 @@
 - 脚本：`scripts/prepare_data_stage1.py`
 - 依赖：项目内 `third_party/python/openpyxl`（已安装）
 
-### 2. 运行方式
+### 2. 一键运行（推荐）
+
+- `bash scripts/run_all.sh`
+- 可选：若要同时构建日频市场大表，使用 `RUN_DAILY=1 bash scripts/run_all.sh`
+- 可选：若要在流程末尾训练 DGL 版 HTGNN，使用 `RUN_DGL=1 bash scripts/run_all.sh`
+- 可选：若要在流程末尾训练当前最优配置的 DGL 改进版，使用 `RUN_DGL_IMPROVED=1 bash scripts/run_all.sh`
+
+### 3. 分步运行方式
 
 - 快速版（节点 + 担保边 + 评级事件，不跑超大财务表）：
   - `PYTHONPATH=./third_party/python python3 scripts/prepare_data_stage1.py --skip-financial`
@@ -127,9 +134,112 @@
 - 下一年标签：`label_rating_next_year`, `label_rating_score_next_year`, `label_downgrade_next_year`
 - 其余财务/担保/静态字段与 `panel_company_year.csv` 保持一致。
 
+### 10. 最终版异构时序图（已构造）
+
+- 脚本：`PYTHONPATH=./third_party/python python3 scripts/build_final_hetero_temporal_graph.py`
+- 输出目录：`processed/final_hetero_temporal_graph/`
+  - `node_mapping.csv`：统一节点索引（3915 家上市公司）
+  - `feature_schema.json`：节点特征字段与关系类型定义
+  - `metadata.json`：全局与逐年规模统计
+  - `snapshots/{year}/node_features.csv`：年度节点特征快照
+  - `snapshots/{year}/edges_guarantee.csv`：担保关系边（上市公司→上市公司）
+  - `snapshots/{year}/edges_equity_assoc.csv`：股权关联边
+  - `snapshots/{year}/edges_co_controller.csv`：同实控人关联边
+
+当前构造统计（2010-2024）：
+- 节点总数：3915
+- 时间快照数：15
+- 边总量：
+  - `guarantee = 40`
+  - `equity_assoc = 456`
+  - `co_controller = 44216`
+
+说明：
+- 关系边已去除自环（`src != dst`）。
+- 该图包为框架无关格式（CSV + JSON），可直接对接 DGL/PyG。
+
 ## 模型与实验
 
-（待补充）
+### 1. 评级下调二分类 baseline（已实现）
+
+- 脚本：`python3 scripts/train_rating_downgrade_baseline.py`
+- 输入：
+  - `processed/stage1/rating_task/train.csv`
+  - `processed/stage1/rating_task/val.csv`
+  - `processed/stage1/rating_task/test.csv`
+  - `processed/stage1/edges_guarantee_listed_to_listed.csv`
+- 输出目录：`processed/stage1/rating_task/experiments/`
+  - `baseline_metrics.json`
+  - `val_predictions.csv`
+  - `test_predictions.csv`
+
+### 2. 特征与方法
+
+- 主任务：`label_downgrade_next_year`（下一年是否评级下调）
+- 模型：
+  - `logreg_balanced`（带类别权重的逻辑回归）
+  - `rf_balanced`（带类别权重的随机森林）
+- 特征：
+  - 训练面板原始字段（财务 + 担保暴露 + 当前评级 + 静态属性）
+  - 新增关系特征：由 `edges_guarantee_listed_to_listed.csv` 生成的年度图特征（入/出事件数、邻居数、金额及其累计量）
+
+### 3. 当前结果（best: `rf_balanced`）
+
+- 验证集（2019-2021）：
+  - `AUC = 0.8222`
+  - `AP = 0.4023`
+  - `Precision@5% = 0.3929`
+  - `Recall@5% = 0.3548`
+- 测试集（2022-2024）：
+  - `AUC = 0.7104`
+  - `AP = 0.2115`
+  - `Precision@5% = 0.2609`
+  - `Recall@5% = 0.2857`
+
+> 该 baseline 用于后续 HTGNN/多关系图模型对照，建议统一沿用同一时间切分与指标集合。
+
+### 4. DGL 版 HTGNN（已实现）
+
+- 脚本：
+  - `PYTHONPATH=./third_party/python DGLDEFAULTDIR=./.dgl DGLBACKEND=pytorch python3 scripts/train_htgnn_dgl.py --device cpu`
+- 输出目录：`processed/final_hetero_temporal_graph/experiments_htgnn_dgl/`
+  - `metrics.json`
+  - `train_curve.csv`
+  - `val_predictions.csv`
+  - `test_predictions.csv`
+  - `best_model.pt`
+
+当前一轮训练结果（window=3）：
+- 验证集：`AUC = 0.5611`, `AP = 0.0923`
+- 测试集：`AUC = 0.5397`, `AP = 0.0489`
+
+注：当前 DGL 版本已跑通流程，但指标低于随机森林 baseline，后续需要重点优化图结构与训练策略。
+
+### 5. DGL 改进版（多维度改进 + 继续实验）
+
+- 脚本：
+  - `PYTHONPATH=./third_party/python DGLDEFAULTDIR=./.dgl DGLBACKEND=pytorch python3 scripts/train_htgnn_dgl_improved.py --device cpu --exp-name v10_all_notab_bce_w6_h128 --relations guarantee,equity_assoc,co_controller --no-tabular-residual --window 6 --hidden-dim 128 --dropout 0.25 --lr 5e-4 --weight-decay 8e-4 --loss bce --epochs 220 --patience 45 --seed 42`
+- 改进点（全过程）：
+  - 数据/特征：加入每年关系图结构统计（各关系入/出度、权重和）、`log1p` 变换、`lag1` 与 `chg1` 时序特征。
+  - 模型结构：关系注意力空间编码（relation attention）+ GRU + 时间注意力（temporal attention）。
+  - 训练策略：`BCEWithLogitsLoss/Focal BCE`（含类别不平衡权重）+ AdamW + LR 调度 + 早停。
+  - 评估策略：在验证集搜索最优阈值（by F1），同时报告 `@0.5` 与 `@tuned` 指标。
+  - 继续优化：加入关系可配置、`BCE/Focal` 可切换、tabular 残差可切换，并做关系消融 + 多种子复现实验。
+- 输出目录：
+  - `processed/final_hetero_temporal_graph/experiments_htgnn_dgl_improved/{exp_name}/`
+  - `processed/final_hetero_temporal_graph/experiments_htgnn_dgl_improved/best_current/`（当前最佳实验快照）
+- 对比汇总：
+  - `processed/final_hetero_temporal_graph/experiments_htgnn_dgl_improved/comparison_summary.json`
+
+当前多组实验结果（测试集 AP）：
+- 旧 DGL：`0.0489`
+- 改进 `v1_w3_h96`：`0.1017`
+- 改进 `v2_w5_h128`：`0.1098`
+- 改进 `v3_w4_h128`：`0.1525`
+- 改进 `v10_all_notab_bce_w6_h128`：`0.1673`（当前最佳，`AUC=0.7724`）
+
+结论：
+- 改进版相对旧 DGL 有明显提升（测试 AP 从 `0.0489` 提升到 `0.1673`，约 `3.42x`），但仍低于 RF baseline（`0.2115`），后续需继续优化关系构图与训练目标。
 
 ## 结果与分析
 

@@ -218,7 +218,7 @@
 ### 5. DGL 改进版（多维度改进 + 继续实验）
 
 - 脚本：
-  - `PYTHONPATH=./third_party/python DGLDEFAULTDIR=./.dgl DGLBACKEND=pytorch python3 scripts/train_htgnn_dgl_improved.py --device cpu --exp-name v10_all_notab_bce_w6_h128 --relations guarantee,equity_assoc,co_controller --no-tabular-residual --window 6 --hidden-dim 128 --dropout 0.25 --lr 5e-4 --weight-decay 8e-4 --loss bce --epochs 220 --patience 45 --seed 42`
+- `PYTHONPATH=./third_party/python DGLDEFAULTDIR=./.dgl DGLBACKEND=pytorch python3 scripts/train_htgnn_dgl_improved.py --device cpu --exp-name v10_all_notab_bce_w6_h128 --relations guarantee,shared_nonlisted_guarantee,equity_assoc,equity_change,co_controller,market_corr --no-tabular-residual --window 6 --hidden-dim 128 --dropout 0.25 --lr 5e-4 --weight-decay 8e-4 --loss bce --epochs 220 --patience 45 --seed 42`
 - 改进点（全过程）：
   - 数据/特征：加入每年关系图结构统计（各关系入/出度、权重和）、`log1p` 变换、`lag1` 与 `chg1` 时序特征。
   - 模型结构：关系注意力空间编码（relation attention）+ GRU + 时间注意力（temporal attention）。

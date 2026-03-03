@@ -24,8 +24,11 @@
   ],
   "relation_types": [
     "guarantee",
+    "shared_nonlisted_guarantee",
     "equity_assoc",
-    "co_controller"
+    "equity_change",
+    "co_controller",
+    "market_corr"
   ],
   "time_granularity": "year",
   "year_range": [

@@ -20,7 +20,8 @@ from typing import Dict, List, Tuple
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 LOCAL_DEP = PROJECT_ROOT / "third_party" / "python"
 if LOCAL_DEP.exists():
-    sys.path.insert(0, str(LOCAL_DEP))
+    # Keep system numpy/torch ahead of vendored deps.
+    sys.path.append(str(LOCAL_DEP))
 
 os.environ.setdefault("DGLDEFAULTDIR", str(PROJECT_ROOT / ".dgl"))
 os.environ.setdefault("DGLBACKEND", "pytorch")
@@ -39,7 +40,14 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 GRAPH_DIR = PROJECT_ROOT / "processed" / "final_hetero_temporal_graph"
 LABEL_PATH = PROJECT_ROOT / "processed" / "stage1" / "rating_task" / "rating_panel_labeled.csv"
 OUT_DIR = GRAPH_DIR / "experiments_htgnn_dgl"
-RELATIONS = ["guarantee", "equity_assoc", "co_controller"]
+RELATIONS = [
+    "guarantee",
+    "shared_nonlisted_guarantee",
+    "equity_assoc",
+    "equity_change",
+    "co_controller",
+    "market_corr",
+]
 NTYPE = "company"
 
 
@@ -105,7 +113,10 @@ def load_snapshots(year_min: int, year_max: int, n_nodes: int, device: torch.dev
         edge_weights = {}
         for rel in RELATIONS:
             ep = ydir / f"edges_{rel}.csv"
-            e = pd.read_csv(ep)
+            if ep.exists():
+                e = pd.read_csv(ep)
+            else:
+                e = pd.DataFrame(columns=["src_id", "dst_id", "weight"])
             if len(e) == 0:
                 src = torch.tensor([], dtype=torch.int64)
                 dst = torch.tensor([], dtype=torch.int64)
@@ -369,4 +380,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -5,8 +5,11 @@
   "year_max": 2024,
   "edge_totals": {
     "guarantee": 40,
+    "shared_nonlisted_guarantee": 10856,
     "equity_assoc": 456,
-    "co_controller": 44216
+    "equity_change": 312,
+    "co_controller": 44216,
+    "market_corr": 264442
   },
   "yearly": [
     {
@@ -14,120 +17,165 @@
       "num_nodes": 3915,
       "num_active_nodes": 350,
       "num_edges_guarantee": 1,
+      "num_edges_shared_nonlisted_guarantee": 2,
       "num_edges_equity_assoc": 2,
-      "num_edges_co_controller": 144
+      "num_edges_equity_change": 0,
+      "num_edges_co_controller": 144,
+      "num_edges_market_corr": 2306
     },
     {
       "year": 2011,
       "num_nodes": 3915,
       "num_active_nodes": 632,
       "num_edges_guarantee": 1,
+      "num_edges_shared_nonlisted_guarantee": 2,
       "num_edges_equity_assoc": 4,
-      "num_edges_co_controller": 270
+      "num_edges_equity_change": 0,
+      "num_edges_co_controller": 270,
+      "num_edges_market_corr": 5623
     },
     {
       "year": 2012,
       "num_nodes": 3915,
       "num_active_nodes": 787,
       "num_edges_guarantee": 1,
+      "num_edges_shared_nonlisted_guarantee": 18,
       "num_edges_equity_assoc": 4,
-      "num_edges_co_controller": 376
+      "num_edges_equity_change": 0,
+      "num_edges_co_controller": 376,
+      "num_edges_market_corr": 7700
     },
     {
       "year": 2013,
       "num_nodes": 3915,
       "num_active_nodes": 789,
       "num_edges_guarantee": 1,
+      "num_edges_shared_nonlisted_guarantee": 10,
       "num_edges_equity_assoc": 2,
-      "num_edges_co_controller": 344
+      "num_edges_equity_change": 6,
+      "num_edges_co_controller": 344,
+      "num_edges_market_corr": 7833
     },
     {
       "year": 2014,
       "num_nodes": 3915,
       "num_active_nodes": 914,
       "num_edges_guarantee": 2,
+      "num_edges_shared_nonlisted_guarantee": 86,
       "num_edges_equity_assoc": 2,
-      "num_edges_co_controller": 470
+      "num_edges_equity_change": 0,
+      "num_edges_co_controller": 470,
+      "num_edges_market_corr": 8451
     },
     {
       "year": 2015,
       "num_nodes": 3915,
       "num_active_nodes": 1137,
       "num_edges_guarantee": 2,
+      "num_edges_shared_nonlisted_guarantee": 2004,
       "num_edges_equity_assoc": 8,
-      "num_edges_co_controller": 672
+      "num_edges_equity_change": 4,
+      "num_edges_co_controller": 672,
+      "num_edges_market_corr": 10952
     },
     {
       "year": 2016,
       "num_nodes": 3915,
       "num_active_nodes": 1362,
       "num_edges_guarantee": 2,
+      "num_edges_shared_nonlisted_guarantee": 2674,
       "num_edges_equity_assoc": 8,
-      "num_edges_co_controller": 944
+      "num_edges_equity_change": 20,
+      "num_edges_co_controller": 944,
+      "num_edges_market_corr": 12264
     },
     {
       "year": 2017,
       "num_nodes": 3915,
       "num_active_nodes": 1800,
       "num_edges_guarantee": 3,
+      "num_edges_shared_nonlisted_guarantee": 906,
       "num_edges_equity_assoc": 10,
-      "num_edges_co_controller": 1228
+      "num_edges_equity_change": 14,
+      "num_edges_co_controller": 1228,
+      "num_edges_market_corr": 15982
     },
     {
       "year": 2018,
       "num_nodes": 3915,
       "num_active_nodes": 1906,
       "num_edges_guarantee": 1,
+      "num_edges_shared_nonlisted_guarantee": 830,
       "num_edges_equity_assoc": 22,
-      "num_edges_co_controller": 1570
+      "num_edges_equity_change": 18,
+      "num_edges_co_controller": 1570,
+      "num_edges_market_corr": 18534
     },
     {
       "year": 2019,
       "num_nodes": 3915,
       "num_active_nodes": 2109,
       "num_edges_guarantee": 3,
+      "num_edges_shared_nonlisted_guarantee": 968,
       "num_edges_equity_assoc": 24,
-      "num_edges_co_controller": 2364
+      "num_edges_equity_change": 12,
+      "num_edges_co_controller": 2364,
+      "num_edges_market_corr": 19953
     },
     {
       "year": 2020,
       "num_nodes": 3915,
       "num_active_nodes": 2544,
       "num_edges_guarantee": 5,
+      "num_edges_shared_nonlisted_guarantee": 2564,
       "num_edges_equity_assoc": 36,
-      "num_edges_co_controller": 3878
+      "num_edges_equity_change": 38,
+      "num_edges_co_controller": 3878,
+      "num_edges_market_corr": 23393
     },
     {
       "year": 2021,
       "num_nodes": 3915,
       "num_active_nodes": 3060,
       "num_edges_guarantee": 5,
+      "num_edges_shared_nonlisted_guarantee": 512,
       "num_edges_equity_assoc": 54,
-      "num_edges_co_controller": 6208
+      "num_edges_equity_change": 48,
+      "num_edges_co_controller": 6208,
+      "num_edges_market_corr": 24730
     },
     {
       "year": 2022,
       "num_nodes": 3915,
       "num_active_nodes": 3484,
       "num_edges_guarantee": 6,
+      "num_edges_shared_nonlisted_guarantee": 140,
       "num_edges_equity_assoc": 82,
-      "num_edges_co_controller": 7468
+      "num_edges_equity_change": 46,
+      "num_edges_co_controller": 7468,
+      "num_edges_market_corr": 32829
     },
     {
       "year": 2023,
       "num_nodes": 3915,
       "num_active_nodes": 3778,
       "num_edges_guarantee": 4,
+      "num_edges_shared_nonlisted_guarantee": 80,
       "num_edges_equity_assoc": 92,
-      "num_edges_co_controller": 9126
+      "num_edges_equity_change": 46,
+      "num_edges_co_controller": 9126,
+      "num_edges_market_corr": 35810
     },
     {
       "year": 2024,
       "num_nodes": 3915,
       "num_active_nodes": 3859,
       "num_edges_guarantee": 3,
+      "num_edges_shared_nonlisted_guarantee": 60,
       "num_edges_equity_assoc": 106,
-      "num_edges_co_controller": 9154
+      "num_edges_equity_change": 60,
+      "num_edges_co_controller": 9154,
+      "num_edges_market_corr": 38082
     }
   ]
 }

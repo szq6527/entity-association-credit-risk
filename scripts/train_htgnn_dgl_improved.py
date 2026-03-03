@@ -25,7 +25,8 @@ from typing import Dict, List, Tuple
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 LOCAL_DEP = PROJECT_ROOT / "third_party" / "python"
 if LOCAL_DEP.exists():
-    sys.path.insert(0, str(LOCAL_DEP))
+    # Keep system numpy/torch ahead of vendored deps.
+    sys.path.append(str(LOCAL_DEP))
 
 os.environ.setdefault("DGLDEFAULTDIR", str(PROJECT_ROOT / ".dgl"))
 os.environ.setdefault("DGLBACKEND", "pytorch")
@@ -45,7 +46,14 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 GRAPH_DIR = PROJECT_ROOT / "processed" / "final_hetero_temporal_graph"
 LABEL_PATH = PROJECT_ROOT / "processed" / "stage1" / "rating_task" / "rating_panel_labeled.csv"
 OUT_ROOT = GRAPH_DIR / "experiments_htgnn_dgl_improved"
-DEFAULT_RELATIONS = ["guarantee", "equity_assoc", "co_controller"]
+DEFAULT_RELATIONS = [
+    "guarantee",
+    "shared_nonlisted_guarantee",
+    "equity_assoc",
+    "equity_change",
+    "co_controller",
+    "market_corr",
+]
 NTYPE = "company"
 
 
@@ -138,7 +146,10 @@ def load_snapshots_with_graph_stats(
         edge_weights = {}
         for rel in relations:
             ep = ydir / f"edges_{rel}.csv"
-            e = pd.read_csv(ep)
+            if ep.exists():
+                e = pd.read_csv(ep)
+            else:
+                e = pd.DataFrame(columns=["src_id", "dst_id", "weight"])
             if len(e) == 0:
                 src = np.array([], dtype=np.int64)
                 dst = np.array([], dtype=np.int64)
@@ -400,7 +411,11 @@ def main() -> None:
     parser.add_argument("--weight-decay", type=float, default=5e-4)
     parser.add_argument("--focal-gamma", type=float, default=1.5)
     parser.add_argument("--loss", type=str, choices=["focal", "bce"], default="focal")
-    parser.add_argument("--relations", type=str, default="guarantee,equity_assoc,co_controller")
+    parser.add_argument(
+        "--relations",
+        type=str,
+        default="guarantee,shared_nonlisted_guarantee,equity_assoc,equity_change,co_controller,market_corr",
+    )
     parser.add_argument("--no-tabular-residual", action="store_true")
     parser.add_argument("--exp-name", type=str, default="default")
     parser.add_argument("--seed", type=int, default=42)

@@ -1,0 +1,3 @@
+﻿src_id,dst_id,weight,shared_nonlisted_target_cnt,shared_nonlisted_target_amt_sum
+111,112,5.303304908059076,1,200.0
+112,111,5.303304908059076,1,200.0

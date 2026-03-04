@@ -1,0 +1,10 @@
+- 全部模型里当前最好：RF baseline
+      - test AP ≈ 0.2115，test AUC ≈ 0.7104
+  - 图模型里当前最好：DGL improved v10_all_notab_bce_w6_h128
+      - test AP ≈ 0.1673，test AUC ≈ 0.7724
+
+- 只用静态特征：test AP = 0.2323，test AUC = 0.7126
+- 加当前图特征：test AP = 0.2115，test AUC = 0.7104
+
+数据：收集全部上市公司 判断的是 信用评级下降 只有143条 
+

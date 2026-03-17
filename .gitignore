@@ -3,35 +3,47 @@
 **/__pycache__/
 *.pyc
 
-# Local research assets (raw source)
+# ===== DATA (proprietary, not included in repo) =====
+# Raw data from CSMAR
 论文/
 数据/
-研究思路.md
+data/
+raw/
+
+# All processed data
+processed/
+
+# Excel data files
 **/*.xlsx
 **/*.xls
 
-# External repos
+# ===== External repos =====
 external/HTGNN/
 
-# Local runtime/cache
+# ===== Local runtime/cache =====
 .dgl/
-scripts/__pycache__/
 third_party/python/
 
-# Keep only training-required datasets under processed/
-processed/**
+# ===== Research notes (Chinese) =====
+研究思路.md
 
-!processed/stage1/
-!processed/stage1/rating_task/
-!processed/stage1/rating_task/rating_panel_labeled.csv
-!processed/stage1/rating_task/train.csv
-!processed/stage1/rating_task/val.csv
-!processed/stage1/rating_task/test.csv
-!processed/stage1/rating_task/summary.json
+# ===== LaTeX build artifacts =====
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+paper/*.toc
+paper/*.lof
+paper/*.lot
+paper/*.nav
+paper/*.snm
+paper/*.vrb
+paper/*.pdf
 
-!processed/final_hetero_temporal_graph/
-!processed/final_hetero_temporal_graph/node_mapping.csv
-!processed/final_hetero_temporal_graph/feature_schema.json
-!processed/final_hetero_temporal_graph/metadata.json
-!processed/final_hetero_temporal_graph/snapshots/
-!processed/final_hetero_temporal_graph/snapshots/**
+# ===== IDE =====
+.vscode/
+.idea/

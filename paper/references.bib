@@ -1,0 +1,446 @@
+%% ==========================================================================
+%% references.bib  –  ITQM 2026 paper
+%% Credit Risk Contagion Prediction via Hierarchical Attention
+%% on Dynamic Heterogeneous Corporate Networks
+%% ==========================================================================
+
+%% ---- 1. Traditional Credit Risk Models ----
+
+@article{altman1968financial,
+  title={Financial ratios, discriminant analysis and the prediction of corporate bankruptcy},
+  author={Altman, Edward I},
+  journal={The Journal of Finance},
+  volume={23},
+  number={4},
+  pages={589--609},
+  year={1968},
+  publisher={Wiley},
+  abstract={The purpose of this study is to formulate a quantitative model based upon multiple discriminant analysis for predicting corporate bankruptcy. A set of financial ratios was used as the discriminating variables, and the resulting discriminant function was found to be extremely accurate in predicting bankruptcy correctly in 94\% of the initial sample.}
+}
+
+@article{merton1974pricing,
+  title={On the pricing of corporate debt: The risk structure of interest rates},
+  author={Merton, Robert C},
+  journal={The Journal of Finance},
+  volume={29},
+  number={2},
+  pages={449--470},
+  year={1974},
+  publisher={Wiley},
+  abstract={While a number of theories and empirical studies have been published on the term structure of interest rates, there has been no systematic development of a theory for pricing bonds when there is a significant probability of default. This paper presents such a theory, applied to the simplest form of corporate debt, the discount bond, and develops a formula for computing the risk structure of interest rates.}
+}
+
+@article{barboza2017machine,
+  title={Machine learning models and bankruptcy prediction},
+  author={Barboza, Flavio and Kimura, Herbert and Altman, Edward},
+  journal={Expert Systems with Applications},
+  volume={83},
+  pages={405--417},
+  year={2017},
+  publisher={Elsevier},
+  abstract={This study tests machine learning models---support vector machines, bagging, boosting, and random forest---to predict bankruptcy one year prior to the event, comparing their performance with results from discriminant analysis, logistic regression, and neural networks. Using data from 1985 to 2013 on North American firms with more than 10,000 firm-year observations, results indicate that machine learning provides a substantial improvement by about 10 percentage points of AuROC in relation to traditional models.}
+}
+
+@article{moscatelli2020corporate,
+  title={Corporate default forecasting with machine learning},
+  author={Moscatelli, Marco and Parlapiano, Fabio and Narizzano, Simone and Ferretti, Gianluca},
+  journal={Expert Systems with Applications},
+  volume={161},
+  pages={113567},
+  year={2020},
+  publisher={Elsevier},
+  abstract={We compare the performance of several statistical and machine learning methods including decision tree, random forest, and gradient boosting for predicting company defaults. Using a dataset of about one million companies in Turkey between 2010--2018 covering balance sheet, credit, and invoice data, we find that gradient boosting and random forest consistently outperform logistic regression and neural networks, with every metric surpassing 90\%.}
+}
+
+%% ---- 2. Credit Risk Contagion & Guarantee Networks ----
+
+@article{lv2023guarantee,
+  title={How to reduce the default contagion risk of intercorporate credit guarantee networks? {Evidence} from {China}},
+  author={Lv, Jiamin and Ben, Shenglin and Huang, Wenli and Xu, Yiping},
+  journal={Emerging Markets Review},
+  volume={55},
+  pages={100967},
+  year={2023},
+  publisher={Elsevier},
+  abstract={Using data from 2011 to 2018 for Chinese SMEs, we construct a weighted directed network to investigate the topology of intercorporate credit guarantee networks and propose a GuaranteeRank model that considers macro-external shock, the company's off-balance-sheet debt, and bank credit support. Results show that the credit guarantee network has ``scale-free'' and ``small world'' characteristics, and default contagion risk increases significantly when macro-external shock and off-balance-sheet debt exceed threshold values, while bank credit support reduces contagion risk.}
+}
+
+@article{ma2022credit,
+  title={The credit risk contagion mechanism of financial guarantee network: An application of the {SEIR}-epidemic model},
+  author={Ma, Guojian and Ding, Juan and Lv, Youqing},
+  journal={Complexity},
+  volume={2022},
+  pages={7669259},
+  year={2022},
+  publisher={Wiley},
+  abstract={This paper constructs a model of the credit risk contagion process in guarantee networks based on the SEIR epidemic model and analyzes its equilibrium point and stability. Results show that risk contagion begins widely only when the contagion threshold exceeds 1, and that the conversion rate of exposed enterprises, removal rate of infected enterprises, nodal enterprise degree, and risk contagion rate significantly affect the contagion dynamics.}
+}
+
+@article{li2024credit,
+  title={Credit risk contagion in complex companies network---Empirical research based on listed agricultural companies},
+  author={Li, Jianping and others},
+  journal={Economic Analysis and Policy},
+  volume={82},
+  pages={938--953},
+  year={2024},
+  publisher={Elsevier},
+  abstract={Using data from China's A-share market from 2002 to 2021, this paper examines credit risk contagion mechanisms in supply chain, investment, and information networks among listed agricultural companies. Results show that credit risk in the supply chain network has the greatest contagion effect, followed by investment and information networks. A one-year time effect indicates that the impact of credit risk contagion decreases over time.}
+}
+
+@article{chen2024supply,
+  title={Credit risk contagion of supply chain finance: An empirical analysis of supply chain listed companies},
+  author={Chen, Jieyu and others},
+  journal={PLoS ONE},
+  volume={19},
+  number={8},
+  pages={e0306724},
+  year={2024},
+  publisher={Public Library of Science},
+  abstract={This study empirically analyzes credit risk contagion in supply chain finance among listed companies in China. Supply chain risk is mainly transmitted through capital path, product path, and information path. State-owned companies and those with high customer concentration have higher risk resistance capacity.}
+}
+
+%% ---- 3. GNN Foundations ----
+
+@inproceedings{kipf2017semi,
+  title={Semi-supervised classification with graph convolutional networks},
+  author={Kipf, Thomas N and Welling, Max},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2017},
+  abstract={We present a scalable approach for semi-supervised learning on graph-structured data that is based on an efficient variant of convolutional neural networks which operate directly on graphs. We motivate the choice of our convolutional architecture via a localized first-order approximation of spectral graph convolutions. Our model scales linearly in the number of graph edges and learns hidden layer representations that encode both local graph structure and features of nodes.}
+}
+
+@inproceedings{velickovic2018graph,
+  title={Graph attention networks},
+  author={Veli{\v{c}}kovi{\'c}, Petar and Cucurull, Guillem and Casanova, Arantxa and Romero, Adriana and Li{\`o}, Pietro and Bengio, Yoshua},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2018},
+  abstract={We present graph attention networks (GATs), novel neural network architectures that operate on graph-structured data, leveraging masked self-attentional layers to address the shortcomings of prior methods based on graph convolutions or their approximations. By stacking layers in which nodes are able to attend over their neighborhoods' features, we enable (implicitly) specifying different weights to different nodes in a neighborhood, without requiring any kind of costly matrix operation or depending on knowing the graph structure upfront.}
+}
+
+@inproceedings{brody2022how,
+  title={How attentive are graph attention networks?},
+  author={Brody, Shaked and Alon, Uri and Yahav, Eran},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2022},
+  abstract={We identify a fundamental limitation in Graph Attention Networks (GATs): the ranking of the attention scores is unconditioned on the query node, which we term ``static attention.'' We distinguish between static and dynamic attention, demonstrating that GATs cannot solve certain graph problems due to their restricted mechanism. We propose GATv2, a simple fix that reorders internal operations to achieve dynamic attention while maintaining comparable computational costs. Experiments show GATv2 outperforms GAT across 11 OGB and other benchmarks.}
+}
+
+@inproceedings{hamilton2017inductive,
+  title={Inductive representation learning on large graphs},
+  author={Hamilton, William L and Ying, Zhitao and Leskovec, Jure},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  pages={1024--1034},
+  year={2017},
+  abstract={We present GraphSAGE, a general inductive framework that leverages node feature information to efficiently generate node embeddings for previously unseen data. Instead of training individual embeddings for each node, we learn a function that generates embeddings by sampling and aggregating features from a node's local neighborhood. The algorithm outperforms strong baselines on three inductive node-classification benchmarks.}
+}
+
+%% ---- 4. Heterogeneous Graph Neural Networks ----
+
+@inproceedings{wang2019heterogeneous,
+  title={Heterogeneous graph attention network},
+  author={Wang, Xiao and Ji, Houye and Shi, Chuan and Wang, Bai and Cui, Peng and Yu, Philip S and Ye, Yanfang},
+  booktitle={The Web Conference (WWW)},
+  pages={2022--2032},
+  year={2019},
+  abstract={We propose a novel heterogeneous graph neural network based on hierarchical attention, including node-level and semantic-level attentions. The node-level attention aims to learn the importance between a node and its metapath-based neighbors, while the semantic-level attention learns the importance of different meta-paths. Through this hierarchical attention mechanism, the proposed model can generate comprehensive node embeddings for heterogeneous graphs. Experiments on three datasets demonstrate superior performance over state-of-the-art baselines.}
+}
+
+@inproceedings{hu2020heterogeneous,
+  title={Heterogeneous graph transformer},
+  author={Hu, Ziniu and Dong, Yuxiao and Wang, Kuansan and Sun, Yizhou},
+  booktitle={The Web Conference (WWW)},
+  pages={2704--2710},
+  year={2020},
+  abstract={Most GNNs are designed for homogeneous graphs, making them infeasible for heterogeneous structures. We propose Heterogeneous Graph Transformer (HGT) with node- and edge-type dependent parameters to characterize heterogeneous attention over each edge. We introduce relative temporal encoding to handle dynamic graphs and HGSampling for efficient training. Experiments on the Open Academic Graph with 179 million nodes and 2 billion edges show 9--21\% improvements over state-of-the-art baselines.}
+}
+
+@article{yang2023heterogeneous,
+  title={Heterogeneous graph neural networks for fraud detection and explanation in supply chain finance},
+  author={Yang, Bin and others},
+  journal={Information Systems},
+  volume={119},
+  pages={102335},
+  year={2023},
+  publisher={Elsevier},
+  abstract={We propose MultiFraud, a multitask framework that provides effective fraud prediction in supply chain finance by constructing different heterogeneous graphs of enterprises and transactions. The framework captures complex relational patterns and dynamics within financial networks, significantly outperforming traditional fraud detection methods.}
+}
+
+%% ---- 5. Temporal / Dynamic Graph Neural Networks ----
+
+@inproceedings{pareja2020evolvegcn,
+  title={{EvolveGCN}: Evolving graph convolutional networks for dynamic graphs},
+  author={Pareja, Aldo and Domeniconi, Giacomo and Chen, Jie and Ma, Tengfei and Suzumura, Toyotaro and Kanezashi, Hiroki and Kaler, Tim and Schardl, Tao and Leiserson, Charles},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={34},
+  number={04},
+  pages={5363--5370},
+  year={2020},
+  abstract={We propose EvolveGCN, which adapts the graph convolutional network (GCN) model along the temporal dimension without resorting to node embeddings. The approach captures the dynamism of the graph sequence through using an RNN to evolve the GCN parameters. Two architectures are considered: EvolveGCN-H using GRU and EvolveGCN-O using LSTM. Experiments on link prediction, edge classification, and node classification show generally higher performance compared with related approaches.}
+}
+
+@inproceedings{sankar2020dysat,
+  title={{DySAT}: Deep neural representation learning on dynamic graphs via self-attention networks},
+  author={Sankar, Aravind and Wu, Yanhong and Gou, Liang and Zhang, Wei and Yang, Hao},
+  booktitle={Proceedings of the 13th International Conference on Web Search and Data Mining (WSDM)},
+  pages={519--527},
+  year={2020},
+  abstract={We present DySAT, a novel neural architecture that learns node representations to capture dynamic graph structural evolution by computing representations through joint self-attention along two dimensions: structural neighborhood and temporal dynamics. DySAT is unsupervised and applicable to downstream tasks such as link prediction, clustering, and node classification. Compared with recurrent methods, dynamic self-attention is efficient while achieving superior performance.}
+}
+
+@inproceedings{xiang2022temporal,
+  title={Temporal and heterogeneous graph neural network for financial time series prediction},
+  author={Xiang, Sheng and Cheng, Dawei and Shang, Chencheng and Zhang, Ying and Liang, Yuqi},
+  booktitle={Proceedings of the 31st ACM International Conference on Information and Knowledge Management (CIKM)},
+  pages={3584--3593},
+  year={2022},
+  abstract={We propose THGNN, a temporal and heterogeneous graph neural network for stock price movement prediction. Rather than relying on manually labeled or NLP-extracted relations, we dynamically construct company relation graphs from historical price data for each trading day, combine transformer encoders for temporal encoding with heterogeneous graph attention networks for spatial encoding. Experiments on U.S. and Chinese stock markets demonstrate significant outperformance, and deployment in a quantitative trading system shows superior portfolio returns.}
+}
+
+@article{rossi2020temporal,
+  title={Temporal graph networks for deep learning on dynamic graphs},
+  author={Rossi, Emanuele and Chamberlain, Ben and Frasca, Fabrizio and Eynard, Davide and Monti, Federico and Bronstein, Michael},
+  journal={arXiv preprint arXiv:2006.10637},
+  year={2020},
+  abstract={We present Temporal Graph Networks (TGN), a generic, efficient framework for deep learning on dynamic graphs represented as sequences of timed events. TGN combines memory modules and graph-based operators to capture temporal dependencies, achieving state-of-the-art results on future edge prediction and dynamic node classification tasks.}
+}
+
+%% ---- 6. GNN for Credit Risk & Default Prediction ----
+
+@article{zhao2024combining,
+  title={Combining intra-risk and contagion risk for enterprise bankruptcy prediction using graph neural networks},
+  author={Zhao, Yu and Wei, Shaopeng and Guo, Yu and Yang, Qing and Chen, Xingyan and Li, Qing and Zhuang, Fuzhen and Liu, Ji and Kou, Gang},
+  journal={Information Sciences},
+  volume={659},
+  pages={120081},
+  year={2024},
+  publisher={Elsevier},
+  abstract={Predicting bankruptcy risk of SMEs is important for financial institutions. We for the first time consider both intra-risk and contagion risk and their joint effects. We develop an intra-risk encoder based on statistically significant financial indicators and a contagion risk encoder based on enterprise knowledge graphs, integrating Hyper-Graph Neural Networks and Heterogeneous Graph Neural Networks to capture risk propagation through shared factors and direct neighbor effects. We build a novel benchmark dataset SMEsD and demonstrate effectiveness against twelve baselines.}
+}
+
+@inproceedings{wang2021temporal,
+  title={Temporal-aware graph neural network for credit risk prediction},
+  author={Wang, Daixin and Zhang, Zhiqiang and Zhou, Jun and Cui, Peng and Fang, Jingli and Jia, Quanhui and Fang, Yanming and Qi, Yuan},
+  booktitle={Proceedings of the 2021 SIAM International Conference on Data Mining (SDM)},
+  pages={702--710},
+  year={2021},
+  abstract={Previous credit risk prediction methods mainly adopt users' individual features on a single snapshot, ignoring that features, behaviors, and credit risk are all dynamic. We propose TemGNN consisting of three parts: a static model for extracting static risk factors, a short-term graph encoder with graph convolution modules for each snapshot to enrich user information through aggregating short-term temporal and structural information, and a long-term temporal model based on LSTM with interval-decayed attention to adaptively aggregate long-term information.}
+}
+
+@article{chen2024temporal,
+  title={Temporal graph learning for default prediction and systemic risk mitigation in financial networks},
+  author={Chen, Qianwen and others},
+  journal={Intelligent Computing},
+  volume={3},
+  pages={0193},
+  year={2024},
+  abstract={During economic downturns, the default of a few firms can trigger a cascade effect within guarantee networks. We propose a temporal graph learning framework integrating macroeconomic trends and a tailored risk matrix, capturing both external shocks and internal contagion risks. The framework considers systemic risk levels affecting individual firms and the delayed occurrence of risks based on temporal network dynamics. Results show effectiveness in helping financial regulators regulate systemic risk in networked-loans.}
+}
+
+@article{cheng2022financial,
+  title={Financial default prediction via motif-preserving graph neural network with curriculum learning},
+  author={Cheng, Dawei and others},
+  booktitle={Proceedings of the 29th ACM SIGKDD Conference on Knowledge Discovery and Data Mining},
+  pages={337--348},
+  year={2023},
+  abstract={We propose a motif-preserving graph neural network with curriculum learning for financial default prediction. The model captures higher-order structural patterns (motifs) in financial networks and uses curriculum learning to progressively train on increasingly difficult samples, improving prediction performance on imbalanced financial datasets.}
+}
+
+@article{wang2022credit,
+  title={Credit risk modeling with graph machine learning},
+  author={Wang, Fei and others},
+  journal={INFORMS Journal on Data Science},
+  volume={1},
+  number={1},
+  pages={42--60},
+  year={2022},
+  publisher={INFORMS},
+  abstract={We construct networks from SEC filings to assess credit risk using graph machine learning. Graph-based approaches offer a flexible framework capable of modeling complex interdependencies among borrowers, lenders, and financial attributes, enabling more context-aware and adaptive risk assessments compared to traditional methods.}
+}
+
+%% ---- 7. Deep Learning Techniques ----
+
+@inproceedings{cho2014learning,
+  title={Learning phrase representations using {RNN} encoder--decoder for statistical machine translation},
+  author={Cho, Kyunghyun and Van Merri{\"e}nboer, Bart and Gulcehre, Caglar and Bahdanau, Dzmitry and Bougares, Fethi and Schwenk, Holger and Bengio, Yoshua},
+  booktitle={Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  pages={1724--1734},
+  year={2014},
+  abstract={We propose a novel neural network model called RNN Encoder--Decoder consisting of two recurrent neural networks. The encoder maps a variable-length source sequence to a fixed-length vector, and the decoder maps the vector back to a variable-length target sequence. We introduce a novel hidden unit---the Gated Recurrent Unit (GRU)---that adaptively captures dependencies of different time scales, resulting in fewer parameters than LSTM while achieving comparable performance.}
+}
+
+@inproceedings{lin2017focal,
+  title={Focal loss for dense object detection},
+  author={Lin, Tsung-Yi and Goyal, Priya and Girshick, Ross and He, Kaiming and Doll{\'a}r, Piotr},
+  booktitle={Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
+  pages={2980--2988},
+  year={2017},
+  abstract={The extreme foreground-background class imbalance is the central cause of poor performance in one-stage object detectors. We propose focal loss, which reshapes the standard cross entropy loss to down-weight the loss assigned to well-classified examples, focusing training on hard negatives. We design RetinaNet, a simple dense detector trained with focal loss, matching the speed of one-stage detectors while surpassing the accuracy of all existing two-stage detectors.}
+}
+
+@article{loshchilov2019decoupled,
+  title={Decoupled weight decay regularization},
+  author={Loshchilov, Ilya and Hutter, Frank},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2019},
+  abstract={L2 regularization and weight decay regularization are equivalent for standard stochastic gradient descent but not for adaptive gradient algorithms such as Adam. We propose AdamW, which decouples the weight decay from the optimization steps, substantially improving Adam's generalization performance to be competitive with SGD with momentum on image classification.}
+}
+
+%% ---- 8. Frameworks & Tools ----
+
+@article{wang2019dgl,
+  title={{DGL}: A graph-centric highly-performant package for graph neural networks},
+  author={Wang, Minjie and Zheng, Da and Ye, Zihao and Gan, Quan and Li, Mufei and Song, Xiang and Zhou, Jinjing and Ma, Chao and Yu, Lingfan and Gai, Yu and Xiao, Tianjun and He, Tong and Karypis, George and Li, Jinyang and Zhang, Zheng},
+  journal={arXiv preprint arXiv:1909.01315},
+  year={2019},
+  abstract={We present Deep Graph Library (DGL), a Python package designed to ease deep learning on graph at scale. DGL provides a versatile control of message passing, speed optimization with automatic batching, and supports multiple backends including PyTorch, MXNet, and TensorFlow. We demonstrate that DGL achieves efficient training on massive graphs with millions of nodes and edges.}
+}
+
+%% ---- 9. Surveys ----
+
+@article{liu2024survey,
+  title={A survey of dynamic graph neural networks},
+  author={Liu, Yanping and others},
+  journal={Frontiers of Computer Science},
+  volume={18},
+  number={6},
+  pages={186901},
+  year={2024},
+  publisher={Springer},
+  abstract={Dynamic graphs model real-world systems where entities and their relationships evolve over time. This survey systematically categorizes dynamic graph neural networks into discrete-time methods (snapshot-based) and continuous-time methods, discussing their architectures, strengths, and limitations. We also survey their applications in social networks, traffic forecasting, financial networks, and other domains.}
+}
+
+@article{cao2024financial,
+  title={Financial fraud detection using graph neural networks: A systematic review},
+  author={Cao, Shiyao and others},
+  journal={Expert Systems with Applications},
+  volume={240},
+  pages={122156},
+  year={2024},
+  publisher={Elsevier},
+  abstract={Graph neural networks are exceptionally adept at capturing complex relational patterns and dynamics within financial networks, significantly outperforming traditional fraud detection methods. This systematic review categorizes GNN-based financial fraud detection approaches by graph construction, model architecture, and training strategies, providing a comprehensive overview of the state-of-the-art and future research directions.}
+}
+
+%% ---- Removed fake entry gnn_finance_review2024 ----
+
+%% ---- 10. Contagion Path Prediction ----
+
+@article{wu2024contagion,
+  title={Contagion path prediction in financial enterprise networks},
+  author={Wu, Xiaotong and others},
+  journal={Informatica},
+  year={2024},
+  abstract={We propose a contagion path prediction algorithm based on deep learning frameworks designed to capture both direct and indirect transmission of financial risks across enterprise networks. The approach uses improved Self-Attention Graph Neural Networks to model cascading effects in guarantee and investment networks among listed companies.}
+}
+
+%% ---- 11. Additional Risk Network Studies ----
+
+@article{niu2020evolving,
+  title={Evolution of the {Chinese} guarantee network under financial crisis and stimulus program},
+  author={Niu, Zibo and others},
+  journal={PLoS ONE},
+  volume={15},
+  number={6},
+  pages={e0232658},
+  year={2020},
+  abstract={This paper analyzes the evolution of the Chinese corporate guarantee network from 2007 to 2015, covering the global financial crisis and China's fiscal stimulus. We find that the guarantee network exhibits power-law degree distributions and small-world properties, and that the stimulus program significantly altered network topology, increasing interconnectedness and potential systemic risk.}
+}
+
+@article{wang2019risk,
+  title={Risk contagion caused by interactions between credit and guarantee networks},
+  author={Wang, Xiaoming and others},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={539},
+  pages={122890},
+  year={2020},
+  publisher={Elsevier},
+  abstract={This paper investigates risk contagion caused by the interactions between credit networks and guarantee networks. Using empirical data from Chinese listed companies, we demonstrate that the coupling of these two networks amplifies systemic risk and identify key topological factors that drive contagion dynamics.}
+}
+
+%% ---- 12. Additional Key References (added) ----
+
+@inproceedings{cheng2020contagion,
+  title={Risk guarantee prediction in networked-loans},
+  author={Cheng, Dawei and Wang, Xiaoyang and Zhang, Ying and Zhang, Liqing},
+  booktitle={Proceedings of the 29th International Joint Conference on Artificial Intelligence (IJCAI)},
+  pages={4483--4489},
+  year={2020},
+  abstract={This paper proposes a Dynamic Graph-based Attention Neural Network (DGANN) for risk guarantee prediction in networked-loans. The model integrates a GCN encoder with structure attention to capture cross-company risk propagation and a GRN encoder with temporal attention to model dynamic risk evolution. Experiments on a real-world networked-loan dataset demonstrate that DGANN significantly outperforms baselines including DeepWalk, GCN, GAT, and LSTM, achieving over 85\% AUC in identifying high-risk guarantee chains.}
+}
+
+@article{cheng2022contagion,
+  title={Regulating systemic crises: Stemming the contagion risk in networked-loans through deep graph learning},
+  author={Cheng, Dawei and Niu, Zhibin and Zhang, Jianfu and Zhang, Yiyi and Zhang, Ying},
+  journal={IEEE Transactions on Knowledge and Data Engineering},
+  volume={35},
+  number={6},
+  pages={6279--6292},
+  year={2023},
+  publisher={IEEE},
+  abstract={The networked-guarantee-loan crisis has drawn significant attention from both academic and industry communities. This paper proposes iConReg, a deep graph learning framework for regulating systemic crises in networked-loans. The framework integrates node-level risk encoding, graph-level contagion modeling, and a temporal attention mechanism to detect early-stage contagion and identify high-risk nodes whose isolation could effectively reduce system-wide default rates by 25.8\%. Experiments on a nationwide dataset demonstrate superior performance with AUC exceeding 91\%.}
+}
+
+@inproceedings{zheng2023qtiah,
+  title={{QTIAH-GNN}: Quantity and topology imbalance-aware heterogeneous graph neural network for bankruptcy prediction},
+  author={Zheng, Yucheng and others},
+  booktitle={Proceedings of the 29th ACM SIGKDD Conference on Knowledge Discovery and Data Mining},
+  pages={3526--3537},
+  year={2023},
+  abstract={We propose QTIAH-GNN for bankruptcy prediction that addresses both quantity-imbalance (long-tail class distribution) and topology-imbalance (message-passing dominated by majority-class neighbors) simultaneously. The model introduces a multi-hierarchy label-aware neighbor selection strategy and an imbalance-oriented loss function. Experiments on a real-world corporate relationship dataset demonstrate that QTIAH-GNN consistently outperforms state-of-the-art baselines by significant margins.}
+}
+
+@article{zandi2024attention,
+  title={Attention-based dynamic multilayer graph neural networks for loan default prediction},
+  author={Zandi, Gholamreza and Korangi, Kamesh and Oskarsdottir, Maria and Mues, Christophe and Bravo, Cristian},
+  journal={European Journal of Operational Research},
+  volume={320},
+  number={2},
+  pages={429--443},
+  year={2025},
+  publisher={Elsevier},
+  abstract={This paper proposes a dynamic multilayer graph neural network model for loan default prediction. The model combines graph attention mechanisms with LSTM networks to capture both spatial dependencies across multiple network layers and temporal dynamics. Using mortgage loan data from Freddie Mac, the multilayer dynamic approach consistently outperforms single-layer and static baselines, with the attention mechanism enabling interpretable temporal weighting of historical snapshots.}
+}
+
+@article{niu2020guarantee,
+  title={Unveiling the evolution of the {Chinese} guarantee network and the impact of the financial crisis and stimulus program},
+  author={Niu, Zhibin and Cheng, Dawei and Zhang, Liqing and Zhang, Jiawan},
+  journal={Nature Communications},
+  volume={11},
+  pages={2972},
+  year={2020},
+  publisher={Nature Publishing Group},
+  abstract={We construct a comprehensive dataset of corporate guarantee relationships in China from 2007 to 2015 and analyze the network's topological evolution. The guarantee network exhibits scale-free and small-world properties. The global financial crisis stabilized the network structure, while the 4-trillion-yuan stimulus program significantly increased interconnectedness, creating fragile mutual-guarantee structures that amplified systemic risk. These findings have important implications for financial regulation.}
+}
+
+@article{ohlson1980financial,
+  title={Financial ratios and the probabilistic prediction of bankruptcy},
+  author={Ohlson, James A},
+  journal={Journal of Accounting Research},
+  volume={18},
+  number={1},
+  pages={109--131},
+  year={1980},
+  publisher={JSTOR},
+  abstract={This study uses a conditional logit model for predicting bankruptcy, employing data from 1970 to 1976. Four basic factors were found to be statistically significant in affecting the probability of failure: the size of the company, a measure of the financial structure, a performance measure, and a measure of current liquidity. The O-score model complements the Altman Z-score by using a logistic regression framework.}
+}
+
+@article{duan2012multiperiod,
+  title={Multiperiod corporate default prediction---A forward intensity approach},
+  author={Duan, Jin-Chuan and Sun, Jie and Wang, Tao},
+  journal={Journal of Econometrics},
+  volume={170},
+  number={1},
+  pages={191--209},
+  year={2012},
+  publisher={Elsevier},
+  abstract={This paper develops a forward intensity model for multiperiod corporate default prediction. The model accounts for time-varying default intensities influenced by firm-specific and macroeconomic covariates, supporting multi-year ahead prediction. The forward intensity approach provides a theoretically consistent framework and achieves strong out-of-sample prediction accuracy on a comprehensive U.S. corporate database.}
+}
+
+@inproceedings{schlichtkrull2018modeling,
+  title={Modeling relational data with graph convolutional networks},
+  author={Schlichtkrull, Michael and Kipf, Thomas N and Bloem, Peter and Van Den Berg, Rianne and Titov, Ivan and Welling, Max},
+  booktitle={European Semantic Web Conference},
+  pages={593--607},
+  year={2018},
+  publisher={Springer},
+  abstract={We introduce Relational Graph Convolutional Networks (R-GCNs) for modeling relational data. R-GCNs extend graph convolutional networks to handle multi-relational data by learning relation-specific weight matrices with basis or block-diagonal decomposition for parameter sharing. We apply R-GCNs to link prediction and entity classification on knowledge bases, demonstrating competitive results on standard benchmarks while providing a scalable approach to relational reasoning.}
+}

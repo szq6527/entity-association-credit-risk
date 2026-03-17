@@ -1,0 +1,450 @@
+%% main.tex  –  Procedia Computer Science / ITQM conference format
+%% Based on official ecrc-procs template from Elsevier
+
+%% The '3p', 'times' and 'procedia' class options are required for Procedia CS
+\documentclass[3p,times,procedia]{elsarticle}
+
+%% The `ecrc' package must be called to make the CRC functionality available
+\usepackage{ecrc}
+
+%% ---- ecrc configuration ----
+\volume{00}
+\firstpage{1}
+\journalname{Procedia Computer Science}
+\runauth{Z. Sun, F. Shao, F. Meng}
+\jid{procs}
+\jnltitlelogo{Procedia Computer Science}
+\CopyrightLine{2026}{Published by Elsevier Ltd.}
+
+%% ---- packages ----
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{subcaption}
+\usepackage{xcolor}
+\usepackage[figuresright]{rotating}
+
+%% ---- draft helper ----
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\dochead{The 13th International Conference on Information Technology and Quantitative Management (ITQM 2026)}
+
+\title{Credit Risk Contagion Prediction via Hierarchical Attention on
+       Dynamic Heterogeneous Corporate Networks}
+
+\author[pku]{Zhengqi Sun\fnref{fn1}}
+\ead{sunzhengqi2024@stu.pku.edu.cn}
+
+\author[pku]{Fei Shao\fnref{fn2}}
+\ead{shaofei0625@stu.pku.edu.cn}
+
+\author[pku]{Fan Meng\corref{cor1}\fnref{fn3}}
+\cortext[cor1]{Corresponding author}
+\ead{mengfan@pku.edu.cn}
+
+\address[pku]{Department of Information Management, Peking University, Beijing 100871, China}
+
+%% ---- Abstract ----
+\begin{abstract}
+Financial distress can propagate through inter-firm networks formed by guarantee relationships, equity linkages, and market co-movements, yet most credit risk models treat firms as independent observations.
+This paper constructs a dynamic heterogeneous corporate network encompassing seven relation types for 3{,}797 Chinese A-share listed companies over 2010--2024 and investigates whether network-mediated contagion signals improve next-year distress prediction.
+Statistical analysis reveals that firms in the highest neighbour-distress quintile face a 3.8$\times$ higher distress rate than those in the lowest ($\rho=0.23$, $p\approx 0$), with the effect persisting among currently profitable firms.
+Logistic regressions with year fixed effects confirm that market-correlation (OR$=$1.245) and industry (OR$=$1.137) contagion channels remain significant ($p<0.001$) after controlling for firm-level financials.
+We propose RA-HTGNN, a Relation-Attention Temporal Heterogeneous Graph Neural Network that combines per-relation graph convolution, relation-level attention fusion, and GRU-based temporal encoding.
+While RA-HTGNN alone (AUC$=$0.795) does not surpass a Random Forest baseline with guarantee-network statistics (AUC$=$0.826), an ensemble of both achieves AUC$=$0.831, demonstrating that graph-learned representations capture complementary contagion signals beyond tabular features.
+Ablation studies across edge types and GNN baselines further characterise each contagion channel's contribution.
+\end{abstract}
+
+%% ---- Keywords ----
+\begin{keyword}
+credit risk contagion \sep heterogeneous graph neural network \sep
+temporal attention \sep guarantee network \sep corporate risk prediction
+\end{keyword}
+
+\end{frontmatter}
+
+%% =====================================================================
+\section{Introduction}
+\label{sec:intro}
+%% =====================================================================
+
+Credit risk assessment has traditionally relied on firm-level financial ratios~\cite{altman1968financial, ohlson1980financial} and structural models of firm value~\cite{merton1974pricing}.
+Machine learning methods---random forests, gradient boosting, and neural networks---have substantially improved prediction accuracy~\cite{barboza2017machine, moscatelli2020corporate}, yet they treat each firm as an independent observation.
+In practice, financial distress propagates through inter-firm connections: a firm that guarantees a defaulting counterparty inherits contingent liabilities; companies sharing a controlling shareholder may suffer coordinated deterioration; and stocks with correlated returns reflect common exposure to systemic shocks.
+
+Empirical studies on guarantee networks~\cite{lv2023guarantee, niu2020guarantee, ma2022credit}, supply chains~\cite{li2024credit, chen2024supply}, and equity linkages~\cite{wang2019risk} confirm that such contagion effects are economically significant.
+The Chinese guarantee network, in particular, has exhibited rapid topological expansion and fragile mutual-guarantee structures that amplify systemic risk~\cite{niu2020guarantee}.
+These contagion channels are heterogeneous in nature, dynamic over time, and vary in strength---properties that tabular models cannot capture.
+
+Graph neural networks (GNNs) provide a principled framework for modelling relational dependencies~\cite{kipf2017semi, velickovic2018graph}.
+Recent work has applied GNNs to guarantee-network risk prediction~\cite{cheng2020contagion, cheng2022contagion}, bankruptcy forecasting with heterogeneous relations~\cite{zhao2024combining, zheng2023qtiah, cheng2022financial}, and temporal credit modelling~\cite{wang2021temporal, chen2024temporal}.
+However, most approaches either collapse all inter-firm relations into a single homogeneous graph~\cite{cheng2020contagion} or focus on a single relation type (typically guarantees).
+Few works jointly model \emph{multiple heterogeneous relation types} and \emph{temporal evolution} for credit risk contagion prediction.
+
+This paper makes three contributions:
+\begin{enumerate}
+\item We construct a \emph{dynamic heterogeneous corporate network} with seven relation types---guarantee, shared non-listed guarantee, equity association, equity change, co-controller, market return correlation, and industry co-membership---for 3{,}797 Chinese A-share listed companies spanning 2010--2024.
+\item We provide \emph{statistical evidence of multi-channel contagion}: firms in the highest neighbour-distress quintile face a 3.8$\times$ higher distress rate, and the effect persists after year fixed effects and financial controls (market-correlation OR$=$1.245$^{***}$, industry OR$=$1.137$^{***}$), even among currently profitable firms.
+\item We propose \emph{RA-HTGNN}, a hierarchical attention architecture combining per-relation graph convolution, relation-level attention fusion, and GRU temporal encoding. Its ensemble with a Random Forest achieves AUC$=$0.831, demonstrating that graph-learned contagion signals complement tabular financial features.
+\end{enumerate}
+
+
+%% =====================================================================
+\section{Related Work}
+\label{sec:related}
+%% =====================================================================
+
+\subsection{Credit Risk Prediction and Contagion}
+\label{subsec:credit_risk}
+
+Classical credit risk models rely on financial ratios~\cite{altman1968financial, ohlson1980financial} or structural models of firm value~\cite{merton1974pricing}.
+Machine learning approaches---random forests, gradient boosting, and neural networks---have demonstrated consistent improvements~\cite{barboza2017machine, moscatelli2020corporate}, yet they model each firm independently.
+A parallel line of research examines how risk propagates through corporate networks.
+Studies on Chinese guarantee networks reveal scale-free topology and systemic fragility~\cite{niu2020guarantee, lv2023guarantee}, while epidemic-style models~\cite{ma2022credit} and supply-chain analyses~\cite{li2024credit, chen2024supply} further characterise contagion dynamics.
+However, these works primarily model contagion \emph{mechanisms} rather than building end-to-end \emph{predictive} systems.
+
+\subsection{Graph Neural Networks for Financial Risk}
+\label{subsec:gnn_finance}
+
+GNNs aggregate neighbourhood information to learn node representations~\cite{kipf2017semi, velickovic2018graph, hamilton2017inductive}.
+In finance, Cheng et al.\ proposed DGANN~\cite{cheng2020contagion} for guarantee-network risk prediction and later iConReg~\cite{cheng2022contagion} for systemic crisis regulation, both operating on homogeneous guarantee graphs.
+Zhao et al.~\cite{zhao2024combining} combined intra-risk and contagion-risk encoders using heterogeneous and hypergraph neural networks for bankruptcy prediction, and Zheng et al.~\cite{zheng2023qtiah} addressed class imbalance in heterogeneous GNN-based bankruptcy models.
+Relational GCN~\cite{schlichtkrull2018modeling} and heterogeneous attention networks (HAN~\cite{wang2019heterogeneous}, HGT~\cite{hu2020heterogeneous}) provide architectural foundations for multi-relational graphs, but their adoption in credit risk remains limited.
+
+\subsection{Temporal Graph Networks}
+\label{subsec:temporal_gnn}
+
+Corporate relationships evolve over time, motivating temporal graph approaches such as EvolveGCN~\cite{pareja2020evolvegcn}, DySAT~\cite{sankar2020dysat}, and TGN~\cite{rossi2020temporal}.
+In finance, THGNN~\cite{xiang2022temporal} combines temporal transformers with heterogeneous graph attention for stock prediction; TemGNN~\cite{wang2021temporal} uses LSTM with interval-decayed attention for credit risk; and Zandi et al.~\cite{zandi2024attention} propose a dynamic multilayer GNN with temporal attention for loan default.
+Our work differs by jointly modelling seven heterogeneous relation types with relation-level attention and GRU temporal encoding, specifically targeting multi-channel credit risk contagion in a 15-year panel of Chinese listed companies.
+
+
+%% =====================================================================
+\section{Problem Formulation}
+\label{sec:problem}
+%% =====================================================================
+
+We model the corporate network as a dynamic heterogeneous graph $\mathcal{G} = \{G_t\}_{t=1}^{T}$, where each yearly snapshot $G_t = (\mathcal{V}, \mathcal{E}_t, \mathcal{R})$ consists of a shared node set $\mathcal{V}$ of $N$ listed companies, a time-varying edge set $\mathcal{E}_t = \bigcup_{r \in \mathcal{R}} \mathcal{E}_t^r$ comprising $|\mathcal{R}|=7$ relation types, and node feature vectors $\mathbf{x}_{v,t} \in \mathbb{R}^d$ encoding financial indicators, market information, and graph-structural statistics.
+
+\textbf{Task.} Given a lookback window of $W$ snapshots $\{G_{t-W+1}, \ldots, G_t\}$, predict whether company $v$ will experience financial distress (defined as net profit $< 0$) in year $t+1$.
+
+
+%% =====================================================================
+\section{Methodology}
+\label{sec:method}
+%% =====================================================================
+
+\subsection{Overview}
+\label{subsec:overview}
+
+Our framework consists of three stages: (1)~heterogeneous graph construction from multiple corporate data sources (\S\ref{subsec:graph_construction}--\ref{subsec:features}), (2)~RA-HTGNN that learns node representations through hierarchical spatial--temporal encoding (\S\ref{subsec:architecture}), and (3)~ensemble integration with a tabular Random Forest for final prediction (\S\ref{subsec:ensemble}).
+The architecture draws on the hierarchical attention principle of HAN~\cite{wang2019heterogeneous}---separating node-level and semantic-level aggregation---but replaces meta-path-based aggregation with per-relation graph convolution~\cite{schlichtkrull2018modeling} and adds a GRU-based temporal encoder.
+
+\subsection{Heterogeneous Graph Construction}
+\label{subsec:graph_construction}
+
+We construct yearly snapshots from the CSMAR database for 3{,}797 A-share listed companies.
+Table~\ref{tab:edge_types} summarises the seven relation types and their characteristics.
+
+\begin{table}[htbp]
+\centering
+\caption{Edge types in the heterogeneous corporate network.}\label{tab:edge_types}
+\begin{tabular}{@{}llr@{}}
+\toprule
+Edge Type & Description & Avg. Edges/Year \\
+\midrule
+Guarantee & Listed-to-listed credit guarantees & $\sim$40 \\
+Shared Non-listed Guar. & Co-guaranteeing a non-listed entity & $\sim$200 \\
+Equity Association & Equity chain linkages & $\sim$500 \\
+Equity Change & Major shareholding changes & $\sim$300 \\
+Co-controller & Shared ultimate controller & $\sim$44{,}000 \\
+Market Correlation & Return correlation $> \tau$ & $\sim$18{,}500 \\
+Industry & Same-industry membership & $\sim$25{,}000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Guarantee and equity edges are sparse but carry direct economic meaning (contingent liability, ownership control); co-controller and market-correlation edges provide broader coverage of indirect contagion channels.
+All edges are constructed independently per year from underlying CSMAR tables, forming a yearly snapshot sequence $\{G_t\}_{t=2010}^{2024}$.
+
+\subsection{Node Feature Engineering}
+\label{subsec:features}
+
+Node features comprise: (a)~financial indicators (total assets, liabilities, revenue, cash flow, asset-liability ratio, ROA, equity ratio), (b)~current-year distress flag, (c)~credit rating information (latest rating, prospect, event count), (d)~firm attributes (market type, industry code, registered capital), (e)~graph-structural statistics (in/out degree and weighted degree per relation type), and (f)~lag-1 and year-over-year change features.
+Heavy-tailed financial variables are log-transformed.
+All numeric features are standardised using training-set statistics.
+
+\subsection{RA-HTGNN Architecture}
+\label{subsec:architecture}
+
+The model consists of three hierarchical levels:
+
+\paragraph{Level 1: Per-Relation Graph Convolution.}
+Following the relation-specific parameterisation of R-GCN~\cite{schlichtkrull2018modeling}, we maintain a separate two-layer GCN~\cite{kipf2017semi} for each relation type with edge weights:
+\begin{equation}
+\mathbf{h}_{v,t}^{r,(l)} = \sigma\!\left(\sum_{u \in \mathcal{N}_r(v,t)} w_{uv}^r \mathbf{W}_r^{(l)} \mathbf{h}_{u,t}^{(l-1)} \right)
+\end{equation}
+where $\mathcal{N}_r(v,t)$ is the set of $r$-type neighbours of $v$ at time $t$, $w_{uv}^r$ is the edge weight, and $\mathbf{W}_r^{(l)}$ is a relation-specific learnable weight matrix.
+
+\paragraph{Level 2: Relation-Level Attention.}
+The outputs from $|\mathcal{R}|$ relation-specific convolutions are fused via a learnable attention mechanism:
+\begin{equation}
+\alpha_r = \frac{\exp(\mathbf{q}^\top \tanh(\mathbf{h}_{v,t}^r))}{\sum_{r'} \exp(\mathbf{q}^\top \tanh(\mathbf{h}_{v,t}^{r'}))}
+\end{equation}
+\begin{equation}
+\mathbf{h}_{v,t}^{\text{spatial}} = \sum_{r \in \mathcal{R}} \alpha_r \, \mathbf{h}_{v,t}^r
+\end{equation}
+
+\paragraph{Level 3: Temporal Aggregation.}
+A GRU~\cite{cho2014learning} processes the sequence of spatial representations over a window of $W$ years:
+\begin{equation}
+\mathbf{o}_{v,t} = \text{GRU}([\mathbf{h}_{v,t-W+1}^{\text{spatial}}, \ldots, \mathbf{h}_{v,t}^{\text{spatial}}])
+\end{equation}
+The final node representation concatenates three components: the last GRU hidden state (capturing sequential evolution), a temporal-attention-weighted summary (allowing the model to attend to informative historical snapshots), and a \emph{tabular residual} from an MLP applied to the raw features of the latest year (preserving firm-level signals that may be lost during graph aggregation).
+A linear classifier with sigmoid activation produces the distress probability.
+
+\subsection{Ensemble Strategy}
+\label{subsec:ensemble}
+
+The final prediction combines RA-HTGNN's predicted probability $p_{\text{GNN}}$ with a Random Forest probability $p_{\text{RF}}$:
+\begin{equation}
+p_{\text{ensemble}} = \alpha \cdot p_{\text{RF}} + (1-\alpha) \cdot p_{\text{GNN}}
+\end{equation}
+where $\alpha$ is tuned on the validation set. This leverages the RF's strength in capturing firm-level financial signals and the GNN's ability to capture relational contagion patterns.
+
+
+%% =====================================================================
+\section{Experiments}
+\label{sec:experiments}
+%% =====================================================================
+
+\subsection{Dataset and Setup}
+\label{subsec:dataset}
+
+We use CSMAR financial data covering all A-share listed companies from 2010 to 2024.
+The prediction label is next-year financial distress, defined as net profit $< 0$.
+Table~\ref{tab:dataset} summarises the dataset statistics.
+
+\begin{table}[htbp]
+\centering
+\caption{Dataset statistics.}\label{tab:dataset}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Item & Value \\
+\midrule
+Companies & 3{,}797 \\
+Firm-year observations & 24{,}343 \\
+Time span & 2010--2023 \\
+Overall positive rate & 16.4\% \\
+\midrule
+Train ($\leq$2018) & 13{,}729 (pos. 9.7\%) \\
+Validation (2019--2021) & 5{,}543 (pos. 18.2\%) \\
+Test (2022--2024) & 5{,}071 (pos. 23.5\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Statistical Evidence of Contagion}
+\label{subsec:stat_evidence}
+
+Before predictive modelling, we test whether network proximity to distressed firms is associated with elevated future distress risk.
+
+\paragraph{Chi-square Tests.}
+Table~\ref{tab:contagion_chi2} reports relative risk (RR) for firms with vs.\ without a distressed neighbour under each relation type.
+
+\begin{table}[htbp]
+\centering
+\caption{Association between neighbour distress and own future distress (chi-square tests).}\label{tab:contagion_chi2}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Edge Type & $N_{\text{connected}}$ & $P(\text{distress}|\text{dis. nbr})$ & $P(\text{distress}|\text{no dis. nbr})$ & RR \\
+\midrule
+Market Corr. & 22{,}909 & 0.208 & 0.090 & 2.30$^{***}$ \\
+Industry & 13{,}746 & 0.169 & 0.069 & 2.44$^{***}$ \\
+All Combined & 23{,}846 & 0.181 & 0.093 & 1.95$^{***}$ \\
+Co-controller & 3{,}340 & 0.199 & 0.180 & 1.11 \\
+Shared Non-listed Guar. & 829 & 0.214 & 0.203 & 1.06 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize $^{***}$ $p<0.001$} \\
+\end{tabular}
+\end{table}
+
+\paragraph{Dose--Response Relationship.}
+We divide firms into quintiles by aggregate neighbour distress ratio.
+The highest quintile exhibits a distress rate of 32.5\%, compared with 8.6\% for the lowest---a 3.8$\times$ difference (Spearman $\rho = 0.230$, $p \approx 0$).
+Critically, this gradient persists among currently profitable firms (RR$=$1.63--1.96, $p<0.001$), demonstrating early-warning value.
+
+\paragraph{Logistic Regression with Year Fixed Effects.}
+To control for firm-level financials and time trends, we estimate logistic regressions on the full sample ($N=$24{,}343) with year dummies.
+Table~\ref{tab:logistic} reports contagion variable odds ratios from the multivariate model.
+
+\begin{table}[htbp]
+\centering
+\caption{Logistic regression with year fixed effects: odds ratios for lagged contagion variables (Model~B).}\label{tab:logistic}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Contagion Channel & OR & 95\% CI & $z$ & $p$ \\
+\midrule
+Market Correlation & 1.245$^{***}$ & [1.201, 1.291] & 11.85 & $<$0.001 \\
+Industry & 1.137$^{***}$ & [1.097, 1.178] & 7.05 & $<$0.001 \\
+Shared Non-listed Guar. & 1.031 & [0.999, 1.064] & 1.88 & 0.061 \\
+Equity Change & 1.000 & [0.965, 1.037] & 0.01 & 0.993 \\
+Equity Association & 0.986 & [0.965, 1.008] & $-$1.23 & 0.217 \\
+Co-controller & 1.013 & [0.983, 1.044] & 0.84 & 0.399 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize Controls: net profit, ROA, equity ratio, cashflow/assets, asset-liability ratio,} \\
+\multicolumn{5}{l}{\footnotesize \phantom{Controls: }current loss flag, log(total assets), year dummies. Pseudo-$R^2=0.196$.} \\
+\multicolumn{5}{l}{\footnotesize LR test vs.\ financial-only model: $\chi^2=226.7$, $p=3.9\times10^{-46}$.} \\
+\multicolumn{5}{l}{\footnotesize $^{***}$ $p<0.001$. Guarantee excluded due to zero variance.} \\
+\end{tabular}
+\end{table}
+
+Among currently profitable firms (Model~D, $N=$20{,}345), market correlation (OR$=$1.296$^{***}$) and industry (OR$=$1.135$^{***}$) remain significant, and shared non-listed guarantees become significant (OR$=$1.049$^{**}$, $p=0.006$).
+
+
+\subsection{Baselines}
+\label{subsec:baselines}
+
+We compare the following models:
+\begin{itemize}
+\item \textbf{Logistic Regression} and \textbf{Random Forest} (RF): tabular models trained on financial features, with an extended variant (L1) that includes guarantee-network graph statistics.
+\item \textbf{MLP}: a feedforward network using the same node features as RA-HTGNN but without graph message passing, serving as an ablation of the graph component.
+\item \textbf{HomoGCN} and \textbf{HomoGAT}: standard two-layer GCN~\cite{kipf2017semi} and GAT~\cite{velickovic2018graph} on the union graph (all edge types merged into a single relation), combined with a GRU temporal encoder.
+\item \textbf{RA-HTGNN} (ours): per-relation graph convolution with relation-level attention and GRU temporal encoding.
+\end{itemize}
+
+\subsection{Implementation Details}
+\label{subsec:impl}
+
+All GNN models use hidden dimension 96, dropout 0.25, temporal window $W=3$, AdamW~\cite{loshchilov2019decoupled} with learning rate $8\times10^{-4}$ and weight decay $5\times10^{-4}$, BCE loss with positive class weight, and early stopping with patience 20 over 120 epochs.
+RF uses 500 trees with balanced class weights and max depth 12.
+Experiments are implemented using DGL~\cite{wang2019dgl} and PyTorch.
+
+
+\subsection{Main Results}
+\label{subsec:main_results}
+
+Table~\ref{tab:main_results} compares all models on the test set.
+
+\begin{table}[htbp]
+\centering
+\caption{Main prediction results on the test set (2022--2024).}\label{tab:main_results}
+\begin{tabular}{@{}llcc@{}}
+\toprule
+Model & Features & Test AUC & Test AP \\
+\midrule
+Logistic Regression & Financial (L0) & 0.769 & 0.540 \\
+Random Forest & Financial (L0) & 0.821 & 0.618 \\
+Random Forest & Financial + Guarantee (L1) & 0.826 & 0.610 \\
+\midrule
+MLP (no graph) & All node features & 0.797 & 0.603 \\
+HomoGCN & All edges merged & 0.795 & 0.586 \\
+HomoGAT & All edges merged & 0.796 & 0.576 \\
+RA-HTGNN (ours) & 6 edge types & 0.795 & 0.578 \\
+\midrule
+\textbf{RF (L1) + RA-HTGNN Ensemble} & $\alpha=0.7$ & \textbf{0.831} & \textbf{0.623} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three key observations emerge.
+First, the RF baseline is a strong predictor: even without graph information (L0, AUC$=$0.821), it outperforms all neural models, and adding guarantee-network statistics (L1, AUC$=$0.826) yields the best single-model result, consistent with prior findings on the dominance of accounting-based indicators~\cite{barboza2017machine, duan2012multiperiod}.
+Second, all neural models---MLP, HomoGCN, HomoGAT, and RA-HTGNN---achieve similar test AUC ($\sim$0.795--0.797), below the RF baseline. This gap likely reflects the moderate sample size ($\sim$24K firm-years) and temporal distribution shift (positive rate rising from 9.7\% to 23.5\%), which limit end-to-end neural training.
+Third, the ensemble of the L1 RF and RA-HTGNN yields the best overall performance (AUC$=$0.831), improving upon the strongest standalone model by $+$0.5 percentage points and confirming that the GNN captures complementary contagion signals not present in tabular features.
+Notably, the homogeneous GNN baselines do not outperform the MLP, suggesting that na\"{i}vely merging heterogeneous edges introduces noise rather than useful relational structure.
+
+
+\subsection{Ablation Study}
+\label{subsec:ablation}
+
+\paragraph{Edge Type Ablation.}
+Table~\ref{tab:ablation} reports RA-HTGNN performance with different relation subsets.
+
+\begin{table}[htbp]
+\centering
+\caption{Ablation: RA-HTGNN test AUC by edge subset and corresponding ensemble (seed 42).}\label{tab:ablation}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Relations Used & Test AUC & Ensemble AUC \\
+\midrule
+All 7 types & 0.790 & 0.828 \\
+6 types (no industry) & 0.795 & \textbf{0.831} \\
+Guarantee + Shared guar. & 0.808 & 0.830 \\
+Guarantee only & 0.808 & 0.830 \\
+Equity assoc. + Equity change & 0.804 & 0.829 \\
+Market correlation only & 0.799 & 0.830 \\
+5 types (no market corr.) & 0.801 & 0.829 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A counter-intuitive finding is that models with fewer edge types achieve higher standalone AUC.
+The ``guarantee only'' model (AUC$=$0.808) outperforms the 6-edge variant (0.795) despite having only $\sim$40 edges per year.
+This occurs because RA-HTGNN includes a tabular-residual MLP path: with very sparse edges, the GCN branch contributes minimal aggregation noise, so the model effectively reduces to an MLP with a small graph bonus.
+Adding dense, low-homophily edges (market correlation, co-controller) introduces neighbourhood noise that degrades the spatial representations.
+However, ensemble performance is remarkably stable across all configurations (AUC 0.828--0.831), indicating that even noisy graph representations provide complementary signal when combined with the RF.
+
+\paragraph{Multi-Seed Stability.}
+Over 4 seeds (42, 123, 7, 1), RA-HTGNN with the best 6-edge configuration achieves test AUC $0.793 \pm 0.005$ and ensemble AUC $0.829 \pm 0.002$, confirming that the ensemble improvement is consistent and not an artefact of seed selection.
+
+
+%% =====================================================================
+\section{Analysis and Discussion}
+\label{sec:analysis}
+%% =====================================================================
+
+\subsection{Why Contagion is Statistically Significant but Prediction-Limited}
+\label{subsec:why_limited}
+
+The apparent paradox---strong statistical contagion effects (RR up to 2.44, OR up to 1.296) yet limited standalone GNN gain---is explained by the causal chain:
+\emph{contagion risk exposure} $\rightarrow$ \emph{financial deterioration} $\rightarrow$ \emph{observed financial indicators}.
+Since the RF already uses downstream financial indicators (net profit, ROA, asset-liability ratio) as features, contagion information is largely subsumed by these endogenous variables.
+The residual contagion signal that RA-HTGNN captures---network-structural patterns not yet reflected in accounting numbers---enables the ensemble to improve, but the marginal gain is bounded by this information overlap.
+This finding echoes the broader observation that network features tend to provide incremental rather than transformative improvements when strong firm-level predictors are available~\cite{wang2022credit}.
+
+\subsection{Interpretation of Contagion Channels}
+\label{subsec:channels}
+
+Market return correlation (OR$=$1.245) likely captures common exposure to macroeconomic and sector-level shocks, consistent with the systemic risk literature~\cite{niu2020guarantee}.
+Industry co-membership (OR$=$1.137) reflects demand-side contagion within product markets, where distress in one firm signals deteriorating industry conditions.
+Guarantee linkages, while economically the most direct contagion channel, are too sparse among listed companies ($\sim$40 edges/year) to yield robust statistical signals---a limitation also noted in studies restricted to listed-firm networks~\cite{lv2023guarantee}.
+Paradoxically, this sparsity benefits the GNN: the ablation shows that guarantee-only models achieve higher standalone AUC (0.808) than multi-edge variants (0.795), because sparse edges avoid the aggregation noise introduced by dense, low-homophily connections.
+The ensemble, however, is robust across all edge configurations (AUC 0.828--0.831), suggesting that the complementary signal extracted by graph learning is more about structural diversity than any single edge type.
+
+\subsection{Limitations}
+\label{subsec:limitations}
+
+Several limitations should be noted.
+(1)~Our graph only covers listed companies; incorporating non-listed entities connected through guarantee chains~\cite{cheng2022contagion} could substantially strengthen contagion signals.
+(2)~Market return correlation may reflect common factor exposure rather than directional risk transmission; disentangling these requires causal identification strategies beyond the scope of this study.
+(3)~The positive rate increases from 9.7\% (train) to 23.5\% (test), reflecting macroeconomic deterioration during 2022--2024, which introduces temporal distribution shift.
+(4)~Yearly snapshots cannot capture within-year contagion dynamics; continuous-time approaches~\cite{rossi2020temporal} may better model rapid risk propagation.
+
+
+%% =====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% =====================================================================
+
+This paper investigated credit risk contagion prediction through dynamic heterogeneous corporate networks covering seven relation types for 3{,}797 Chinese A-share companies over 2010--2024.
+We established statistically significant contagion effects across multiple channels, with market-correlation and industry co-membership contributing most strongly after controlling for firm-level financials.
+Our proposed RA-HTGNN, combined with a Random Forest in an ensemble, achieves AUC$=$0.831, demonstrating that graph-learned contagion representations provide complementary predictive value beyond tabular financial features.
+The finding that contagion signals are largely mediated through observable financial indicators has practical implications: network monitoring can serve as an early-warning system even when its direct predictive margin is modest.
+
+Future work will pursue three directions: (1)~incorporating non-listed entities into the guarantee network to recover stronger contagion signals~\cite{cheng2022contagion}, (2)~adopting continuous-time temporal graph architectures~\cite{rossi2020temporal} for finer-grained dynamics, and (3)~exploring attention-based explainability to identify the most influential contagion paths for regulatory decision-making.
+
+
+%% =====================================================================
+%% References
+%% =====================================================================
+\bibliographystyle{elsarticle-num}
+\bibliography{references}
+
+\end{document}

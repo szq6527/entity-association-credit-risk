@@ -24,8 +24,9 @@ external/HTGNN/
 .dgl/
 third_party/python/
 
-# ===== Research notes (Chinese) =====
+# ===== Research notes / internal docs =====
 研究思路.md
+docs/
 
 # ===== LaTeX build artifacts =====
 paper/*.aux
